@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎉</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* animated bg */
+body::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image: radial-gradient(circle, red 2px, transparent 2px),
+                    radial-gradient(circle, yellow 2px, transparent 2px),
+                    radial-gradient(circle, cyan 2px, transparent 2px);
+  background-size: 60px 60px;
+  animation: move 12s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes move {
+  100% { transform: translate(-60px,-60px); }
+}
+
+/* screen shake */
+.shake {
+  animation: shake 0.5s;
+}
+@keyframes shake {
+  0% { transform: translate(2px,2px); }
+  25% { transform: translate(-2px,3px); }
+  50% { transform: translate(3px,-2px); }
+  75% { transform: translate(-3px,2px); }
+  100% { transform: translate(0,0); }
+}
+
+.container {
+  text-align: center;
+  color: white;
+  z-index: 2;
+  padding: 20px;
+}
+
+button {
+  padding: 14px 28px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #00c9ff, #92fe9d);
+  cursor: pointer;
+}
+
+#noBtn {
+  position: absolute;
+}
+
+/* typing */
+.typing {
+  border-right: 3px solid white;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: typing 4s steps(40), blink .7s infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  50% { border-color: transparent }
+}
+
+h1 {
+  display: none;
+  animation: fadeIn 1.5s ease forwards;
+}
+
+.message {
+  display: none;
+  font-size: 22px;
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* fireworks style confetti */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="screen">
+
+  <!-- Step 1 -->
+  <div id="start">
+    <h2>🎁 Are you ready for a surprise?</h2>
+    <button onclick="start()">Yes 😄</button>
+    <button id="noBtn" onmouseover="moveNo()">No 😅</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div id="main" style="display:none;">
+    <h1 id="title">🎉 Happy Birthday Nasrin Khatoon 🎉</h1>
+
+    <div class="message" id="msg">
+      <div class="typing">
+        💙 You are an amazing student 😄
+      </div>
+      <br><br>
+      🎂 May your life be full of happiness,<br>
+      success & unlimited fun!<br><br>
+      Be Strong Be happy 😎
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+function start() {
+  document.getElementById("start").style.display = "none";
+  document.getElementById("main").style.display = "block";
+
+  document.getElementById("screen").classList.add("shake");
+  setTimeout(()=> {
+    document.getElementById("screen").classList.remove("shake");
+  }, 500);
+
+  setTimeout(() => {
+    document.getElementById("title").style.display = "block";
+  }, 300);
+
+  setTimeout(() => {
+    document.getElementById("msg").style.display = "block";
+  }, 1200);
+
+  fireworks();
+}
+
+/* No button bhaage */
+function moveNo() {
+  let btn = document.getElementById("noBtn");
+  btn.style.left = Math.random()*(window.innerWidth-100)+"px";
+  btn.style.top = Math.random()*(window.innerHeight-50)+"px";
+}
+
+/* fireworks effect */
+function fireworks() {
+  for (let i=0;i<120;i++) {
+    let p = document.createElement("div");
+    p.classList.add("particle");
+
+    let x = window.innerWidth/2;
+    let y = window.innerHeight/2;
+
+    p.style.left = x+"px";
+    p.style.top = y+"px";
+    p.style.background = randomColor();
+
+    document.body.appendChild(p);
+
+    let angle = Math.random()*2*Math.PI;
+    let radius = Math.random()*300;
+
+    p.animate([
+      { transform: "translate(0,0)" },
+      { transform: `translate(${Math.cos(angle)*radius}px, ${Math.sin(angle)*radius}px)` }
+    ], {
+      duration: 1000,
+      easing: "ease-out"
+    });
+
+    setTimeout(()=>p.remove(),1000);
+  }
+}
+
+function randomColor() {
+  return ["#ff0","#0ff","#f0f","#0f0","#ff5733"][Math.floor(Math.random()*5)];
+}
+
+</script>
+
+</body>
+</html>
