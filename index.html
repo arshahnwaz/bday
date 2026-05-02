@@ -17,34 +17,92 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+/* 🌌 stars */
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: floatStar linear infinite;
+}
+
+/* movement */
+@keyframes floatStar {
+  from {
+    transform: translateY(100vh);
+  }
+  to {
+    transform: translateY(-10vh);
+  }
+}
+
+
 /* animated bg */
+/* 🔥 animated gradient background */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+
+  background: linear-gradient(
+    -45deg,
+    #ff4b2b,
+    #ff416c,
+    #3a86ff,
+    #8338ec,
+    #06d6a0
+  );
+
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+}
+
+/* gradient animation */
+@keyframes gradientBG {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 🔥 dotted overlay */
 body::before {
   content: "";
   position: absolute;
   width: 200%;
   height: 200%;
-  background-image: radial-gradient(circle, red 2px, transparent 2px),
-                    radial-gradient(circle, yellow 2px, transparent 2px),
-                    radial-gradient(circle, cyan 2px, transparent 2px);
-  background-size: 60px 60px;
-  animation: move 12s linear infinite;
-  opacity: 0.5;
+  pointer-events: none;
+
+  background-image: radial-gradient(circle, white 1px, transparent 1px);
+  background-size: 35px 35px;
+
+  opacity: 0.2;
+  animation: dotsMove 12s linear infinite;
+}
+
+/* dots animation */
+@keyframes dotsMove {
+  100% { transform: translate(-35px, -35px); }
 }
 
 @keyframes move {
   100% { transform: translate(-60px,-60px); }
 }
 
-/* screen shake */
+/* shake */
 .shake {
   animation: shake 0.5s;
 }
 @keyframes shake {
-  0% { transform: translate(2px,2px); }
-  25% { transform: translate(-2px,3px); }
-  50% { transform: translate(3px,-2px); }
-  75% { transform: translate(-3px,2px); }
-  100% { transform: translate(0,0); }
+  25% { transform: translate(-3px,3px); }
+  50% { transform: translate(3px,-3px); }
+  75% { transform: translate(-3px,3px); }
 }
 
 .container {
@@ -54,6 +112,7 @@ body::before {
   padding: 20px;
 }
 
+/* button */
 button {
   padding: 14px 28px;
   font-size: 18px;
@@ -61,8 +120,19 @@ button {
   border-radius: 12px;
   background: linear-gradient(45deg, #00c9ff, #92fe9d);
   cursor: pointer;
+  transition: 0.3s;
 }
 
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #00c9ff;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* no btn */
 #noBtn {
   position: absolute;
 }
@@ -70,19 +140,15 @@ button {
 /* typing */
 .typing {
   border-right: 3px solid white;
-  white-space: nowrap;
-  overflow: hidden;
+  white-space: normal;
   display: inline-block;
-  animation: typing 4s steps(40), blink .7s infinite;
+  animation: fadeIn 2s ease;
 }
 
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink {
-  50% { border-color: transparent }
+/* fade */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
 
 h1 {
@@ -96,19 +162,13 @@ h1 {
   margin-top: 20px;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(20px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
-/* fireworks style confetti */
+/* particles */
 .particle {
   position: absolute;
   width: 6px;
   height: 6px;
   border-radius: 50%;
 }
-
 </style>
 </head>
 
@@ -134,7 +194,7 @@ h1 {
       <br><br>
       🎂 May your life be full of happiness,<br>
       success & unlimited fun!<br><br>
-      Be Strong Be happy 😎
+      😎 Be Strong, Be Happy!
     </div>
   </div>
 
@@ -146,10 +206,10 @@ function start() {
   document.getElementById("start").style.display = "none";
   document.getElementById("main").style.display = "block";
 
-  document.getElementById("screen").classList.add("shake");
-  setTimeout(()=> {
-    document.getElementById("screen").classList.remove("shake");
-  }, 500);
+  let screen = document.getElementById("screen");
+  screen.classList.add("shake");
+
+  setTimeout(()=> screen.classList.remove("shake"), 500);
 
   setTimeout(() => {
     document.getElementById("title").style.display = "block";
@@ -157,29 +217,30 @@ function start() {
 
   setTimeout(() => {
     document.getElementById("msg").style.display = "block";
-  }, 1200);
+  }, 1000);
 
   fireworks();
 }
 
-/* No button bhaage */
+/* no button move (fixed for mobile) */
 function moveNo() {
   let btn = document.getElementById("noBtn");
-  btn.style.left = Math.random()*(window.innerWidth-100)+"px";
-  btn.style.top = Math.random()*(window.innerHeight-50)+"px";
+
+  let x = Math.random() * (window.innerWidth - btn.offsetWidth);
+  let y = Math.random() * (window.innerHeight - btn.offsetHeight);
+
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
 }
 
-/* fireworks effect */
+/* fireworks */
 function fireworks() {
-  for (let i=0;i<120;i++) {
+  for (let i=0;i<100;i++) {
     let p = document.createElement("div");
     p.classList.add("particle");
 
-    let x = window.innerWidth/2;
-    let y = window.innerHeight/2;
-
-    p.style.left = x+"px";
-    p.style.top = y+"px";
+    p.style.left = window.innerWidth/2 + "px";
+    p.style.top = window.innerHeight/2 + "px";
     p.style.background = randomColor();
 
     document.body.appendChild(p);
@@ -191,17 +252,36 @@ function fireworks() {
       { transform: "translate(0,0)" },
       { transform: `translate(${Math.cos(angle)*radius}px, ${Math.sin(angle)*radius}px)` }
     ], {
-      duration: 1000,
+      duration: 1200,
       easing: "ease-out"
     });
 
-    setTimeout(()=>p.remove(),1000);
+    setTimeout(()=>p.remove(),1200);
   }
 }
 
 function randomColor() {
   return ["#ff0","#0ff","#f0f","#0f0","#ff5733"][Math.floor(Math.random()*5)];
 }
+
+/* 🌌 create stars */
+function createStars() {
+  for (let i = 0; i < 120; i++) {
+    let s = document.createElement("div");
+    s.className = "star";
+
+    s.style.left = Math.random() * 100 + "vw";
+    s.style.top = Math.random() * 100 + "vh";
+
+    s.style.animationDuration = (5 + Math.random() * 5) + "s";
+    s.style.opacity = Math.random();
+
+    document.body.appendChild(s);
+  }
+}
+
+/* call on load */
+createStars();
 
 </script>
 
